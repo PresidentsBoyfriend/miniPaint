@@ -1,15 +1,9 @@
-let activePaint = false, 
-    activeColor = false,
-    activeMove = false, 
-    activeTransform = false;
-
-
 let btnPaint = document.querySelector('.btn-paint'), 
     btnColor = document.querySelector('.btn-color'),
     btnMove = document.querySelector('.btn-move'),
     btnTransforn = document.querySelector('.btn-transform'),
     workPlace = document.querySelector('.workPlace'),
-    btnPlace = document.querySelector('.btns');
+    allPlace = document.body;
 
 
 let block0 = document.getElementById("block0").style.cssText = JSON.parse(localStorage.getItem("block0")) || " position: absolute; \
@@ -89,14 +83,15 @@ let currentColor = document.querySelector('.currentDott'),
 currentColor.style.cssText = JSON.parse(localStorage.getItem("currColor")) || "background: white;";
 prevColor.style.cssText = JSON.parse(localStorage.getItem("prevColor")) || "background: white;";
 
-
-let active;
-
-
 redColor.style.background = "red";
 blueColor.style.background = "blue";
 greenColor.style.background = "green";
 yellowColor.style.background = "yellow";
+
+
+let active,
+    firstItem, 
+    secondItem;
 
 
 btnPaint.addEventListener('click', function () {
@@ -140,59 +135,83 @@ yellowColor.addEventListener('click', function() {
 });
 
 
-let firstItem, secondItem;
-
 workPlace.addEventListener('click', function (){
-    if (active == "paint") {
-        document.elementFromPoint(event.pageX, event.pageY).style.background=currentColor.style.background;
-        return LocalStorage();
+    if (document.elementFromPoint(event.pageX, event.pageY) == workPlace) {
+        console.log('Stop');
     }
-    if (active == "color") {
-        setTimeout (function() {
-            active = undefined;
-            btnColor.style.textDecoration  = "none";
-            return LocalStorage();
-            }, 0);
-        prevColor.style.background = currentColor.style.background;
-        currentColor.style.background = document.elementFromPoint(event.pageX, event.pageY).style.backgroundColor;
-    }
-    if (active == "move") {
-        var timeLeftFisrt,
-            timeTopFirst;
-        if (!firstItem) {
-            firstItem = document.elementFromPoint(event.pageX, event.pageY);
-            firstItem.style.boxShadow = "0 0 10px rgb(157, 16, 238)";
+    else {
+        switch (active) {
+            case "paint":
+                paint();    
+                break;
+            case "color":
+                getColor(); 
+                break;
+            case "move":
+                move();
+                break;
+            case "transform":
+                transform();
+                break;
+            default:
+            console.log('Error');
+                break;
         }
-        else {
-            secondItem = document.elementFromPoint(event.pageX, event.pageY);
-            firstItem.style.boxShadow = "none";
-            timeTopFirst = firstItem.style.top;
-            timeLeftFisrt = firstItem.style.left;
-
-            firstItem.style.top = secondItem.style.top;
-            firstItem.style.left = secondItem.style.left;
-
-            secondItem.style.top = timeTopFirst;
-            secondItem.style.left = timeLeftFisrt;
-
-            firstItem = undefined;
-            secondItem = undefined;
-            active = undefined;
-            btnMove.style.textDecoration  = "none";
-            return LocalStorage();
-        }
-    }
-    if (active == "transform") {
-        let itemBlock = document.elementFromPoint(event.pageX, event.pageY);
-        if (itemBlock.style.borderRadius == "100%") {
-            itemBlock.style.borderRadius = "0";
-        }
-        else {
-            itemBlock.style.borderRadius = "100%";
-        }
-        return LocalStorage();
     }
 });
+
+function paint() {
+    document.elementFromPoint(event.pageX, event.pageY).style.background=currentColor.style.background;
+    return LocalStorage();
+};
+
+function getColor() {
+    setTimeout (function() {
+        active = undefined;
+        btnColor.style.textDecoration  = "none";
+        return LocalStorage();
+        }, 0);
+    prevColor.style.background = currentColor.style.background;
+    currentColor.style.background = document.elementFromPoint(event.pageX, event.pageY).style.backgroundColor;
+};
+
+function move() {
+    var timeLeftFisrt,
+        timeTopFirst;
+    if (!firstItem) {
+        firstItem = document.elementFromPoint(event.pageX, event.pageY);
+        firstItem.style.boxShadow = "0 0 10px rgb(157, 16, 238)";
+    }
+    else {
+        secondItem = document.elementFromPoint(event.pageX, event.pageY);
+        firstItem.style.boxShadow = "none";
+        timeTopFirst = firstItem.style.top;
+        timeLeftFisrt = firstItem.style.left;
+
+        firstItem.style.top = secondItem.style.top;
+        firstItem.style.left = secondItem.style.left;
+
+        secondItem.style.top = timeTopFirst;
+        secondItem.style.left = timeLeftFisrt;
+
+        firstItem = undefined;
+        secondItem = undefined;
+        active = undefined;
+        btnMove.style.textDecoration  = "none";
+        return LocalStorage();
+    }
+};
+
+function transform() {
+    let itemBlock = document.elementFromPoint(event.pageX, event.pageY);
+    if (itemBlock.style.borderRadius == "100%") {
+        itemBlock.style.borderRadius = "0";
+    }
+    else {
+        itemBlock.style.borderRadius = "100%";
+    }
+    return LocalStorage();
+};
 
 function Activated (active) {
     switch (active) {
@@ -221,7 +240,10 @@ function Activated (active) {
             btnMove.style.textDecoration = "none";
             break;
         default:
-            console.log('Error');
+            btnTransforn.style.textDecoration  = "none";
+            btnPaint.style.textDecoration = "none";
+            btnColor.style.textDecoration = "none";
+            btnMove.style.textDecoration = "none";
             break;
     }
 };
@@ -274,3 +296,33 @@ function LocalStorage() {
     localStorage.setItem("block8", itemBlock8);
 };
 
+allPlace.addEventListener('keydown', function (e) {
+    switch (event.keyCode) {
+        case 27:
+            active = undefined;
+            Activated(active);
+            break;
+        case 80:
+            active = "paint";
+            Activated(active);
+            break;
+        case 67:
+            active = "color";
+            Activated(active);
+            break;
+        case 77:
+            active = "move";
+            Activated(active);
+            break;
+        case 84:
+            active = "transform";
+            Activated(active);
+            break;
+        case 109:
+            localStorage.clear();
+            location.reload();
+            break;
+        default:
+            break;
+    }
+});
