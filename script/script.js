@@ -13,20 +13,19 @@ let btnPaint = document.querySelector('.btn-paint'),
     btnPlace = document.querySelector('.btns');
 
 //Блоки
-let block0 = document.getElementById("block0").style.cssText =" position: absolute; \
+let block0 = document.getElementById("block0").style.cssText = JSON.parse(localStorage.getItem("block0")) || " position: absolute; \
                                                                 top: 0;\
                                                                 left: 0;\
                                                                 margin: 5px;\
                                                                 height: 200px;\
                                                                 width: 200px;\
                                                                 background: #5c5c5c;",
-    block1 = document.getElementById("block1").style.cssText =" position: absolute; \
-                                                                top: 0;\
-                                                                left: 205px;\
-                                                                margin: 5px;\
-                                                                height: 200px;\
-                                                                width: 200px;\
-                                                                background: #5c5c5c;",
+    block1 = document.getElementById("block1").style.cssText =JSON.parse(localStorage.getItem("block1")) || "position: absolute;\
+     top: 0; left: 205px;\
+    margin: 5px;\
+    height: 200px;\
+    width: 200px;\
+    background: #5c5c5c;"
     block2 = document.getElementById("block2").style.cssText =" position: absolute; \
                                                                 top: 0;\
                                                                 left: 410px;\
@@ -119,23 +118,22 @@ blueColor.addEventListener('click', function() {
     return currentColor.style.background = "blue";
 });
 
-
 let firstItem, secondItem;
 workPlace.addEventListener('click', function (){
-    if (activePaint == true) {
+    if (active == "paint") {
         document.elementFromPoint(event.pageX, event.pageY).style.background=currentColor.style.background;
-        console.log(activePaint);
+        return LocalStorage();
     }
-    if (activeColor == true) {
+    if (active == "color") {
         setTimeout (function() {
-            activeColor = false;
+            active = undefined;
             btnColor.style.textDecoration  = "none";
             }, 0);
         prevColor.style.background = currentColor.style.background;
+        console.log(document.elementFromPoint(event.pageX, event.pageY));
         currentColor.style.background = document.elementFromPoint(event.pageX, event.pageY).style.backgroundColor;
     }
-    if (activeMove == true) {
-        activeColor = false;
+    if (active == "move") {
         var timeLeftFisrt,
             timeTopFirst;
         if (!firstItem) {
@@ -145,19 +143,24 @@ workPlace.addEventListener('click', function (){
         else {
             secondItem = document.elementFromPoint(event.pageX, event.pageY);
             firstItem.style.boxShadow = "none";
+            //замена стилей позиции элементов
             timeTopFirst = firstItem.style.top;
             timeLeftFisrt = firstItem.style.left;
+
             firstItem.style.top = secondItem.style.top;
             firstItem.style.left = secondItem.style.left;
+
             secondItem.style.top = timeTopFirst;
             secondItem.style.left = timeLeftFisrt;
+
             firstItem = undefined;
             secondItem = undefined;
-            activeMove = false;
+            active = undefined;
             btnMove.style.textDecoration  = "none";
+            return LocalStorage();
         }
     }
-    if (activeTransform == true) {
+    if (active == "transform") {
         let itemBlock = document.elementFromPoint(event.pageX, event.pageY);
         if (itemBlock.style.borderRadius == "100%") {
             itemBlock.style.borderRadius = "0";
@@ -165,46 +168,31 @@ workPlace.addEventListener('click', function (){
         else {
             itemBlock.style.borderRadius = "100%";
         }
+        return LocalStorage();
     }
 });
 
 function Activated (active) {
     switch (active) {
         case "paint":
-            activeMove = false; 
-            activeTransform = false;
-            activeColor = false;
-            activePaint = true;
             btnPaint.style.textDecoration  = "underline";;
             btnTransforn.style.textDecoration  = "none";
             btnColor.style.textDecoration  = "none";
             btnMove.style.textDecoration  = "none";
             break;
         case "color":
-            activePaint = false;
-            activeMove = false; 
-            activeTransform = false;
-            activeColor = true;
             btnColor.style.textDecoration  = "underline";
             btnPaint.style.textDecoration  = "none"
             btnTransforn.style.textDecoration  = "none";
             btnMove.style.textDecoration  = "none";
             break;
         case "move":
-            activePaint = false;
-            activeTransform = false;
-            activeColor = false;
-            activeMove = true; 
             btnMove.style.textDecoration  = "underline";
             btnPaint.style.textDecoration = "none";
             btnColor.style.textDecoration  = "none";
             btnTransforn.style.textDecoration  = "none";
             break;
         case "transform":
-            activePaint = false;
-            activeMove = false; 
-            activeColor = false;
-            activeTransform = true;
             btnTransforn.style.textDecoration  = "underline";
             btnPaint.style.textDecoration = "none";
             btnColor.style.textDecoration = "none";
@@ -215,3 +203,13 @@ function Activated (active) {
             break;
     }
 };
+
+function LocalStorage() {
+    block0 = document.getElementById("block0").style.cssText
+    let itemBlock0 = JSON.stringify(block0);
+    localStorage.setItem("block0", itemBlock0);
+    block1 = document.getElementById("block1").style.cssText
+    let itemBlock1 = JSON.stringify(block1);
+    localStorage.setItem("block1", itemBlock1);
+};
+
