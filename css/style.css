@@ -20,7 +20,6 @@ header {
     font-family: 'Titillium-Web';
 }
 
-
 .menuBlock {
     width: 160px;
     left: 5px;
@@ -103,15 +102,16 @@ header .second {
     flex-direction: row;
 }
 
-
-
 .colors a i {
     padding: 5px 0;
     margin: 0 20px;
-    width: 16px;
-    height: 6px;
+    width: 18px;
+    height: 8px;
     border-radius: 100%;
     border: 1px solid;
+}
+
+.redDott, .blueDott, .greenDott, .yellowDott {
     cursor: pointer;
 }
 
@@ -136,6 +136,14 @@ header .second {
 }
 
 .blue {
+    margin-top: 10px;
+}
+
+.green {
+    margin-top: 10px;
+}
+
+.yellow {
     margin-top: 10px;
     margin-bottom: 20px;
 }
