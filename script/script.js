@@ -116,22 +116,26 @@ btnTransforn.addEventListener('click', function () {
 
 redColor.addEventListener('click', function() {
     prevColor.style.background = currentColor.style.background;
-    return currentColor.style.background = "red";
+    currentColor.style.background = "red";
+    return LocalStorage();
 });
 
 blueColor.addEventListener('click', function() {
     prevColor.style.background = currentColor.style.background;
-    return currentColor.style.background = "blue";
+    currentColor.style.background = "blue";
+    return LocalStorage();
 });
 
 greenColor.addEventListener('click', function() {
     prevColor.style.background = currentColor.style.background;
-    return currentColor.style.background = "green";
+    currentColor.style.background = "green";
+    return LocalStorage();
 });
 
 yellowColor.addEventListener('click', function() {
     prevColor.style.background = currentColor.style.background;
-    return currentColor.style.background = "yellow";
+    currentColor.style.background = "yellow";
+    return LocalStorage();
 });
 
 
